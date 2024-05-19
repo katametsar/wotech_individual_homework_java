@@ -1,5 +1,5 @@
 # Individual homework java 
-## 15.05.2024 tic-tac-toe##
+## 15.05.2024 tic-tac-toe
 ```java
 # Welcome to my homework repository
 
