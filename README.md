@@ -76,7 +76,6 @@ public class Main {
             } else {
                 System.out.println(secondPlayer + "'s turn");
             }
-
             int row = playerInput(scanner, "row") - 1;
             int column = playerInput(scanner, "column") - 1;
 
@@ -85,7 +84,6 @@ public class Main {
                 printBoard(board);
 
                 win = checkWin(board);
-
                 if (win) {
                     System.out.println((firstPlayerTurn ? firstPlayer : secondPlayer) + " wins!");
                 } else {
@@ -95,11 +93,9 @@ public class Main {
                 System.out.println("Invalid move. Try again.");
             }
         }
-
         if (!win) {
             System.out.println("The game is a draw!");
         }
-
         scanner.close();
     }
 
@@ -111,7 +107,6 @@ public class Main {
             System.out.println();
         }
     }
-
     public static int playerInput(Scanner scanner, String type) {
         System.out.print("Enter " + type + " (1-3): ");
         while (!scanner.hasNextInt()) {
@@ -120,11 +115,9 @@ public class Main {
         }
         return scanner.nextInt();
     }
-
     public static boolean isValidMove(int[][] board, int row, int column) {
         return row >= 0 && row < 3 && column >= 0 && column < 3 && board[row][column] == 0;
     }
-
     public static boolean boardFull(int[][] board) {
         for (int[] row : board) {
             for (int cell : row) {
@@ -137,13 +130,11 @@ public class Main {
     }
 
     public static boolean checkWin(int[][] board) {
-        // Check rows
         for (int i = 0; i < 3; i++) {
             if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
                 return true;
             }
         }
-        // Check columns
         for (int i = 0; i < 3; i++) {
             if (board[0][i] != 0 && board[0][i] == board[1][i] && board[0][i] == board[2][i]) {
                 return true;
