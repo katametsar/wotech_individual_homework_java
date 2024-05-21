@@ -44,4 +44,114 @@ class HelloWorld {
 }
 }
 ```
+## Tic-tac-toe medium
+```java
+/*Medium: Ask for row and column and write in the two dimensional array a value "1" or "2" in the correct place, depending on which players turn it is. Switch the turn after every move.
+
+Check whether or not the row chosen by user contains all 1, or all 2.
+
+Check whether or not the column chosen by user contains all 1, or all 2.
+
+(1 represents X, 2 represents O, 0 represents empty)*/
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        int[][] board = new int[3][3];
+        boolean firstPlayerTurn = true;
+        boolean win = false;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the game of tic-tac-toe. We have two users and winner is the one, who gets a row or column filled first.");
+        System.out.println("What is the name of first player: ");
+        String firstPlayer = scanner.nextLine();
+        System.out.println("What is the name of second player: ");
+        String secondPlayer = scanner.nextLine();
+        System.out.println("Welcome " + firstPlayer + " and " + secondPlayer + ". " + firstPlayer + " uses number 1 and " + secondPlayer + " uses 2, let's begin the game and see, who gets a row or a column first.");
+
+        while (!win && !boardFull(board)) {
+            if (firstPlayerTurn) {
+                System.out.println(firstPlayer + "'s turn");
+            } else {
+                System.out.println(secondPlayer + "'s turn");
+            }
+
+            int row = playerInput(scanner, "row") - 1;
+            int column = playerInput(scanner, "column") - 1;
+
+            if (isValidMove(board, row, column)) {
+                board[row][column] = firstPlayerTurn ? 1 : 2;
+                printBoard(board);
+
+                win = checkWin(board);
+
+                if (win) {
+                    System.out.println((firstPlayerTurn ? firstPlayer : secondPlayer) + " wins!");
+                } else {
+                    firstPlayerTurn = !firstPlayerTurn;
+                }
+            } else {
+                System.out.println("Invalid move. Try again.");
+            }
+        }
+
+        if (!win) {
+            System.out.println("The game is a draw!");
+        }
+
+        scanner.close();
+    }
+
+    public static void printBoard(int[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static int playerInput(Scanner scanner, String type) {
+        System.out.print("Enter " + type + " (1-3): ");
+        while (!scanner.hasNextInt()) {
+            System.out.print("Invalid input. Enter " + type + " (1-3): ");
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
+
+    public static boolean isValidMove(int[][] board, int row, int column) {
+        return row >= 0 && row < 3 && column >= 0 && column < 3 && board[row][column] == 0;
+    }
+
+    public static boolean boardFull(int[][] board) {
+        for (int[] row : board) {
+            for (int cell : row) {
+                if (cell == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkWin(int[][] board) {
+        // Check rows
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
+                return true;
+            }
+        }
+        // Check columns
+        for (int i = 0; i < 3; i++) {
+            if (board[0][i] != 0 && board[0][i] == board[1][i] && board[0][i] == board[2][i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 
