@@ -1,4 +1,99 @@
 # Individual homework java 
+## 29.05.2024 book manager
+```java
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class Main {
+    public static BookManager bookManager = new BookManager();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Press 1 to insert a book");
+            System.out.println("Press 2 to show the list of books");
+            System.out.println("Press 3 to remove a book from the list");
+            System.out.println("Press x to stop.");
+            String userInput = scanner.nextLine();
+
+            if (userInput.equals("1")) {
+                createBook(scanner);
+            } else if (userInput.equals("2")) {
+                showBookList();
+            } else if (userInput.equals("3")) {
+                showBookList();
+                System.out.println("Enter the name of the book you want to remove:");
+                String bookName = scanner.nextLine();
+                bookManager.removeBook(bookName);
+            } else if (userInput.equalsIgnoreCase("x")) {
+                break;
+            }
+        }
+    }
+
+    public static void createBook(Scanner scanner) {
+        System.out.println("Enter the book name:");
+        String name = scanner.nextLine();
+        System.out.println("Enter the book author:");
+        String author = scanner.nextLine();
+
+        Book book = new Book(name, author);
+        bookManager.addBook(book);
+    }
+
+    public static void showBookList() {
+        ArrayList<Book> books = bookManager.getBooks();
+        if (books.isEmpty()) {
+            System.out.println("No books in the list.");
+        } else {
+            System.out.println("These books have been added to the list:");
+            for (Book book : books) {
+                System.out.println(book.getName() + " by  " + book.getAuthor());
+            }
+        }
+    }
+}
+```
+```java
+public class Book{
+
+  public String name; 
+  public String author;
+
+  public Book(String name, String author){
+    this.name = name;
+    this.author = author;
+    
+  }
+  public String getName(){
+  return name;
+}
+  public String getAuthor(){
+    return author;
+  }
+}
+```
+```java
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+public class BookManager {
+    private ArrayList<Book> books = new ArrayList<>();
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+
+    public void removeBook(String bookName) {
+        books.removeIf(book -> book.name.equals(bookName));
+    }
+}
+```
 ## 15.05.2024 tic-tac-toe
 ```java
 /* Easy: Ask user for row and column and write in the two dimensional array a value "1" in the correct place.
