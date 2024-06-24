@@ -1,4 +1,289 @@
 # Individual homework java 
+## 13.06.2024 cheese shop
+```java
+    import java.util.Scanner;
+
+public class Main {
+    public static CheeseShop shop = new CheeseShop();
+    public static CheeseService cheeseService = new CheeseService();
+    public static Customer customer = new Customer(100);
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to the cheese shop! We have the best selection of cheeses in the Baltic states. This is a serious shop so identify yourself before going forward");
+
+        while (true) {
+            System.out.println("Press 1 if you are the owner of this great establishment.");
+            System.out.println("Press 2 if you just want to buy some cheese.");
+            System.out.println("Press 3 to leave this shop.");
+            System.out.println();
+            String userInput = scanner.nextLine();
+
+            if (userInput.equals("1")) {
+                    ownerMenu(scanner);
+                } else if (userInput.equals("2")) {
+                    customerMenu(scanner);
+                } else if (userInput.equals("3")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please try again.");
+                }
+            }
+
+            scanner.close();
+        }
+
+    public static void ownerMenu(Scanner scanner) {
+        while (true) {
+            System.out.println("Dear owner, here you can add and remove cheeses to the shop and see the items we have in store.");
+            System.out.println("Press 1 to insert a cheese to the list.");
+            System.out.println("Press 2 to get the list of cheeses.");
+            System.out.println("Press 3 to remove a cheese from the list.");
+            System.out.println("Press 4 to go back.");
+            System.out.println();
+            String userInput = scanner.nextLine();
+
+            if (userInput.equals("1")) {
+                    createItem(scanner);
+                } else if (userInput.equals("2")) {
+                    showItemList();
+                } else if (userInput.equals("3")) {
+                    showItemList();
+                    System.out.println("Enter the ID of the cheese you want to remove:");
+                    int itemId = scanner.nextInt();
+                    scanner.nextLine();
+                    shop.removeItem(itemId);
+                    cheeseService.removeItem(itemId);
+                } else if (userInput.equals("4")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please try again.");
+                }
+            }
+        }
+
+    public static void customerMenu(Scanner scanner) {
+            while (true) {
+                System.out.println("Press 1 to view available cheeses.");
+                System.out.println("Press 2 to buy a cheese.");
+                System.out.println("Press 3 to view your cart.");
+                System.out.println("Press 4 to remove a cheese from your cart.");
+                System.out.println("Press 5 to checkout and see the total price of your items.");
+                System.out.println("Press 6 to go back.");
+                System.out.println();
+
+                String userInput = scanner.nextLine();
+
+                if (userInput.equals("1")) {
+                    showItemList();
+                } else if (userInput.equals("2")) {
+                    showItemList();
+                    System.out.println("Enter the ID of the cheese you want to buy:");
+                    int itemId = scanner.nextInt();
+                    scanner.nextLine();
+                    Item item = shop.getItemById(itemId);
+                    if (item != null) {
+                        customer.buyItem(item);
+                        shop.addItemToCart(item);
+                    } else {
+                        System.out.println("Cheese not found.");
+                    }
+                } else if (userInput.equals("3")) {
+                    showCartItems();
+                } else if (userInput.equals("4")) {
+                    showCartItems();
+                    System.out.println("Enter the ID of the cheese you want to remove from the cart:");
+                    int itemId = scanner.nextInt();
+                    scanner.nextLine();
+                    shop.removeItemFromCart(itemId);
+                } else if (userInput.equals("5")) {
+                    showCheckOut();
+                } else if (userInput.equals("6")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please try again.");
+                }
+            }
+        }
+
+    public static void createItem(Scanner scanner) {
+            System.out.println("Enter the ID of the cheese: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Enter the name of the cheese: ");
+            String name = scanner.nextLine();
+            System.out.println("Enter the cost: ");
+            int cost = scanner.nextInt();
+            scanner.nextLine();
+            Item item = new Item(id, name, cost);
+            shop.addItem(item);
+            cheeseService.addItem(item);
+        }
+
+    public static void showItemList() {
+            for (Item item : shop.getItems()) {
+                System.out.println("ID: " + item.getId() + ", Name: " + item.getName() + ", Cost: " + item.getCost());
+            }
+        }
+
+    public static void showCartItems() {
+            for (Item item : shop.getCartItems()) {
+                System.out.println("ID: " + item.getId() + ", Name: " + item.getName() + ", Cost: " + item.getCost());
+            }
+        }
+
+    public static void showCheckOut() {
+            int total = shop.checkOut();
+            System.out.println("Total price of your cheese-cart is: " + total);
+        }
+    }
+```
+```java
+public class Item {
+    private int id;
+    private String name;
+    private int cost;
+
+    public Item(int id, String name, int cost) {
+        this.id = id;
+        this.name = name;
+        this.cost = cost;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+}
+```
+```java
+import java.util.ArrayList;
+
+public class CheeseShop {
+    private ArrayList<Item> items = new ArrayList<Item>();
+    private ArrayList<Item> cart = new ArrayList<Item>();
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public void removeItem(int id) {
+        items.removeIf(item -> item.getId() == id);
+        cart.removeIf(item -> item.getId() == id);
+    }
+
+    public Item getItemById(int id) {
+        for (Item item : items) {
+            if (item.getId() == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void addItemToCart(Item item) {
+        cart.add(item);
+    }
+
+    public void removeItemFromCart(int id) {
+        cart.removeIf(item -> item.getId() == id);
+    }
+
+    public ArrayList<Item> getCartItems() {
+        return cart;
+    }
+
+    public int checkOut() {
+        int sum = 0;
+        for (Item item : cart) {
+            sum += item.getCost();
+        }
+        return sum;
+    }
+}
+```
+```java
+import java.util.ArrayList;
+
+public class CheeseService {
+    private ArrayList<Item> items = new ArrayList<Item>();
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public void removeItem(int id) {
+        items.removeIf(item -> item.getId() == id);
+    }
+
+    public void updateItem(int id, String name, int cost) {
+        for (Item item : items) {
+            if (item.getId() == id) {
+                item.setName(name);
+                item.setCost(cost);
+                return;
+            }
+        }
+    }
+}
+```
+```java
+import java.util.ArrayList;
+
+public class Customer {
+    private int money;
+    private ArrayList<Item> ownedItems = new ArrayList<Item>();
+
+    public Customer(int money) {
+        this.money = money;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public ArrayList<Item> getOwnedItems() {
+        return ownedItems;
+    }
+
+    public void buyItem(Item item) {
+        if (money >= item.getCost()) {
+            money -= item.getCost();
+            ownedItems.add(item);
+        } else {
+            System.out.println("You don't have enough money to buy " + item.getName());
+        }
+    }
+}
+```
+
 ## 29.05.2024 book manager
 ```java
 import java.util.Scanner;
